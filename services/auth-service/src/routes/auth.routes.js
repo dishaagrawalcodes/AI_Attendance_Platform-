@@ -4,6 +4,8 @@ const router = express.Router();
 const authenticateUser = require("../middleware/auth.middleware");
 const authorizeRoles = require("../middleware/authorize.middleware");
 const { register, login } = require("../controllers/auth.controller");
+const { registerValidation,loginValidation} = require("../validations/auth.validation");
+const validate = require("../middleware/validation.middleware");
 
 router.get("/health", (req, res) => {
   res.json({
@@ -12,8 +14,19 @@ router.get("/health", (req, res) => {
   });
 });
 
-router.post("/register", register);
-router.post("/login", login);
+router.post(
+  "/register",
+  registerValidation,
+  validate,
+  register
+);
+router.post(
+  "/login",
+  loginValidation,
+  validate,
+  login
+);
+
 router.get("/profile", authenticateUser, (req, res) => {
 
     res.json({

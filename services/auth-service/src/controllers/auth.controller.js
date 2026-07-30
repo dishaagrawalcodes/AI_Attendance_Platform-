@@ -2,8 +2,8 @@ const {
   registerUser,
   loginUser,
 } = require("../services/auth.service");
-
-const register = async (req, res) => {
+const asyncHandler = require("../utils/asyncHandler");
+const register = asyncHandler(async (req, res) => {
   try {
     const user = await registerUser(req.body);
 
@@ -21,7 +21,7 @@ const register = async (req, res) => {
     });
 
   }
-};
+});
 
 const login = async (req, res) => {
   try {
