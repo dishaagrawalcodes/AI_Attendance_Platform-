@@ -1,12 +1,12 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const ApiError = require("../utils/ApiError");
 const registerUser = async ({ name, email, password, role }) => {
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
-    throw new Error("User already exists");
+    throw new ApiError(400, "User already exists");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -28,13 +28,13 @@ const loginUser = async ({ email, password }) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new Error("User not found");
+    throw new ApiError(404, "User not found");
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    throw new Error("Invalid Credentials");
+    throw new ApiError(401, "Invalid Credentials");
   }
 
   const token = jwt.sign(
