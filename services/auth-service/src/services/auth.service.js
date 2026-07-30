@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const ApiError = require("../utils/ApiError");
+const logger = require("../utils/logger");
 const registerUser = async ({ name, email, password, role }) => {
   const existingUser = await User.findOne({ email });
 
