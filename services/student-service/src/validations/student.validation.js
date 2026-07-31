@@ -13,9 +13,9 @@ const createStudentValidation = [
     .notEmpty()
     .withMessage("Enrollment Number is required"),
 
-  body("departmentId")
-    .notEmpty()
-    .withMessage("Department ID is required"),
+  body("department")
+  .notEmpty()
+  .withMessage("Department is required"),
 
   body("semester")
     .isInt({ min: 1 })
