@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { createProxyMiddleware } = require("http-proxy-middleware");
-
+const authMiddleware = require("./middleware/auth.middleware");
 const app = express();
 
 app.use(cors());
@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 4000;
 app.use(
   "/api/auth",
   createProxyMiddleware({
-    target: "http://localhost:5000",
+  target: "http://auth-service:5000",
     changeOrigin: true,
     pathRewrite: (path) => `/api/auth${path}`,
   })
@@ -21,8 +21,9 @@ app.use(
 // Student Service
 app.use(
   "/api/students",
+  authMiddleware,
   createProxyMiddleware({
-    target: "http://localhost:5001",
+    target: "http://student-service:5001",
     changeOrigin: true,
     pathRewrite: (path) => `/api/students${path}`,
   })
