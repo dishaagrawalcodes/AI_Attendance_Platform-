@@ -25,6 +25,19 @@ services:
     depends_on:
       - mongodb
 
+  gateway:
+    build:
+      context: ./services/gateway
+    container_name: attendance-gateway
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+      JWT_SECRET: ${mySuperSecretKey}
+    depends_on:
+      - auth-service
+      - student-service
+
   mongodb:
     image: mongo:7
     container_name: attendance-mongodb
@@ -35,4 +48,3 @@ services:
 
 volumes:
   mongodb_data:
-  
