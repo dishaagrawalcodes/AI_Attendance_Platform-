@@ -8,6 +8,7 @@ const {
   getById,
   update,
   remove,
+  getMe,
 } = require("../controllers/student.controller");
 
 const validate = require("../middleware/validation.middleware");
@@ -41,7 +42,7 @@ router.post("/", createStudentValidation, validate, create);
  *         description: Students fetched successfully
  */
 router.get("/", getAll);
-
+router.get("/me", getMe);
 /**
  * @swagger
  * /api/students/{id}:

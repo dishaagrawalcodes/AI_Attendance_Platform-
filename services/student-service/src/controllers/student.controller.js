@@ -6,6 +6,7 @@ const {
   getStudentById,
   updateStudent,
   deleteStudent,
+  getMyProfile,
 } = require("../services/student.service");
 
 const create = asyncHandler(async (req, res) => {
@@ -57,11 +58,21 @@ const remove = asyncHandler(async (req, res) => {
     message: "Student deleted successfully",
   });
 });
+const getMe = asyncHandler(async (req, res) => {
+  const userId = req.headers["x-user-id"];
 
+  const student = await getMyProfile(userId);
+
+  res.status(200).json({
+    success: true,
+    data: student,
+  });
+});
 module.exports = {
   create,
   getAll,
   getById,
   update,
   remove,
+  getMe,
 };

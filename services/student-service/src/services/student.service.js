@@ -109,10 +109,20 @@ const deleteStudent = async (id) => {
   logger.info(`Student ${student.rollNumber} deleted`);
 };
 
+const getMyProfile = async (userId) => {
+  const student = await Student.findOne({ userId });
+
+  if (!student) {
+    throw new ApiError(404, "Student profile not found");
+  }
+
+  return student;
+};
 module.exports = {
   createStudent,
   getAllStudents,
   getStudentById,
   updateStudent,
   deleteStudent,
+  getMyProfile,
 };
