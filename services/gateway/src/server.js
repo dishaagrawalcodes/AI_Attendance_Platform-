@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const authMiddleware = require("./middleware/auth.middleware");
+const authorizeRoles = require("./middleware/authorize.middleware");
 const app = express();
 
 app.use(cors());
@@ -29,6 +30,23 @@ app.use(
   })
 );
 
+// Attendance Service
+app.use(
+  "/api/attendance",
+  authMiddleware,
+  (req, res, next) => {
+    if (req.method === "GET") {
+      return next();
+    }
+
+    return authorizeRoles("admin", "faculty")(req, res, next);
+  },
+  createProxyMiddleware({
+    target: "http://attendance-service:5002",
+    changeOrigin: true,
+    pathRewrite: (path) => `/api/attendance${path}`,
+  })
+);
 app.get("/health", (req, res) => {
   res.json({
     success: true,
