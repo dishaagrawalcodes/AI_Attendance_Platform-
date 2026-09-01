@@ -3,7 +3,13 @@ const attendanceService = require("../services/attendance.service");
 // Mark Attendance
 const markAttendance = async (req, res) => {
   try {
-    const attendance = await attendanceService.markAttendance(req.body);
+    const attendanceData = {
+      ...req.body,
+      markedBy: req.headers["x-user-id"],
+    };
+
+    const attendance =
+      await attendanceService.markAttendance(attendanceData);
 
     return res.status(201).json({
       success: true,
@@ -13,7 +19,15 @@ const markAttendance = async (req, res) => {
   } catch (error) {
     console.error("Mark attendance error:", error);
 
-    return res.status(500).json({
+    // Duplicate attendance
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: "Attendance already marked for this student on this date",
+      });
+    }
+
+    return res.status(error.statusCode || 500).json({
       success: false,
       message: error.message,
     });
