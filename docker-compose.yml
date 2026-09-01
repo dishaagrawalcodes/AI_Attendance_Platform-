@@ -25,6 +25,19 @@ services:
     depends_on:
       - mongodb
 
+  attendance-service:
+    build:
+      context: ./services/attendance-service
+    container_name: attendance-service
+    ports:
+      - "5002:5002"
+    environment:
+      PORT: 5002
+      MONGO_URI: mongodb://mongodb:27017/attendance_attendance
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      - mongodb
+
   gateway:
     build:
       context: ./services/gateway
@@ -37,6 +50,7 @@ services:
     depends_on:
       - auth-service
       - student-service
+      - attendance-service
 
   mongodb:
     image: mongo:7
