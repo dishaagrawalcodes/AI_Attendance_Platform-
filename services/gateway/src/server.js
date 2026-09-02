@@ -47,6 +47,16 @@ app.use(
     pathRewrite: (path) => `/api/attendance${path}`,
   })
 );
+// Analytics Service
+app.use(
+  "/api/analytics",
+  authMiddleware,
+  createProxyMiddleware({
+    target: "http://analytics-service:5003",
+    changeOrigin: true,
+    pathRewrite: (path) => `/api/analytics${path}`,
+  })
+);
 app.get("/health", (req, res) => {
   res.json({
     success: true,

@@ -13,6 +13,7 @@ services:
     depends_on:
       - mongodb
 
+
   student-service:
     build:
       context: ./services/student-service
@@ -24,6 +25,7 @@ services:
       MONGO_URI: mongodb://mongodb:27017/attendance_student
     depends_on:
       - mongodb
+
 
   attendance-service:
     build:
@@ -38,6 +40,25 @@ services:
     depends_on:
       - mongodb
 
+
+  analytics-service:
+    build:
+      context: ./services/analytics-service
+    container_name: attendance-analytics
+    ports:
+      - "5003:5003"
+    environment:
+      PORT: 5003
+      MONGO_URI: mongodb://mongodb:27017/attendance_analytics
+      JWT_SECRET: ${JWT_SECRET}
+      ATTENDANCE_SERVICE_URL: http://attendance-service:5002
+      STUDENT_SERVICE_URL: http://student-service:5001
+    depends_on:
+      - mongodb
+      - attendance-service
+      - student-service
+
+
   gateway:
     build:
       context: ./services/gateway
@@ -51,6 +72,8 @@ services:
       - auth-service
       - student-service
       - attendance-service
+      - analytics-service
+
 
   mongodb:
     image: mongo:7
@@ -59,6 +82,7 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+
 
 volumes:
   mongodb_data:
